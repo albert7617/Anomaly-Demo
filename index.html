@@ -5,6 +5,7 @@
   <title>Traffic Anomaly</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha256-aAr2Zpq8MZ+YA/D6JtRD3xtrwpEz2IqOS+pWD/7XKIw=" crossorigin="anonymous" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js" integrity="sha256-/ijcOLwFf26xEYAjW75FizKVo5tnTYiQddPZoLUHHZ8=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha256-OFRAJNoaD8L3Br5lglV7VyLRf0itmoBzWUoM+Sji4/8=" crossorigin="anonymous"></script>
 </head>
 <style>
@@ -84,7 +85,7 @@
     event.preventDefault();
     $.when($('#content').find('h1, div').remove()).then(createContent($(this).val(), anomaly), null);
   });
-
+  
   function createContent(startIdx, anomaly) {
     let content = '';
     for (let [key, value] of Object.entries(anomaly)) {
@@ -97,10 +98,11 @@
       let header = `<h1>Video ${key}</h1>`;
       let frames = '<div class="flex-row">';
       for (idx in anomaly[key]) {
+        let frameCount = Math.floor(idx / 30);
         if (anomaly[key][idx]) {
-          frames += '<div class="object object-yep"></div>';
+          frames += '<div class="object object-yep" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-title="'+frameCount+'s"></div>';
         } else {
-          frames += '<div class="object object-non"></div>';
+          frames += '<div class="object object-non" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-title="'+frameCount+'s"></div>';
         }
       }
       frames += '</div>';
@@ -108,6 +110,7 @@
       content += frames;
     }
     $('#content').html(content);
+    $('#content').find('[data-toggle="tooltip"]').tooltip()
   }
 </script>
 </html>
