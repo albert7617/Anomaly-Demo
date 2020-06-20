@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Traffic Anomaly</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha256-aAr2Zpq8MZ+YA/D6JtRD3xtrwpEz2IqOS+pWD/7XKIw=" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha256-OFRAJNoaD8L3Br5lglV7VyLRf0itmoBzWUoM+Sji4/8=" crossorigin="anonymous"></script>
+</head>
+<style>
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.object {
+  width: 3px;
+  height: 10px;
+}
+
+.object-non {
+  background-color: lime;
+}
+
+.object-yep {
+  background-color: red;
+}
+</style>
+
+<body>
+  <div class="container pt-5">
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inline-radio-1" value="0" checked>
+      <label class="form-check-label" for="inline-radio-1">1~10</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inline-radio-2" value="10">
+      <label class="form-check-label" for="inline-radio-2">11~20</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inline-radio-3" value="20">
+      <label class="form-check-label" for="inline-radio-3">21~30</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inline-radio-4" value="30">
+      <label class="form-check-label" for="inline-radio-4">31~40</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inline-radio-5" value="40">
+      <label class="form-check-label" for="inline-radio-5">41~50</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inline-radio-6" value="50">
+      <label class="form-check-label" for="inline-radio-6">51~60</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inline-radio-7" value="60">
+      <label class="form-check-label" for="inline-radio-7">61~70</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inline-radio-8" value="70">
+      <label class="form-check-label" for="inline-radio-8">71~80</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inline-radio-9" value="80">
+      <label class="form-check-label" for="inline-radio-9">81~90</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inline-radio-10" value="90">
+      <label class="form-check-label" for="inline-radio-10">91~99</label>
+    </div>
+    <div id="content">
+      
+    </div>
+  </div>
+</body>
+<script>
+  let anomaly
+  $.getJSON("output.json", function(json) {
+    anomaly = json;
+    createContent(0, anomaly);
+  });
+  $('input:radio').on('change', function(event) {
+    event.preventDefault();
+    $.when($('#content').find('h1, div').remove()).then(createContent($(this).val(), anomaly), null);
+  });
+
+  function createContent(startIdx, anomaly) {
+    let content = '';
+    for (let [key, value] of Object.entries(anomaly)) {
+      if (key - startIdx < 0) {
+        continue;
+      }
+      if (key - startIdx > 10) {
+        break;
+      }
+      let header = `<h1>Video ${key}</h1>`;
+      let frames = '<div class="flex-row">';
+      for (idx in anomaly[key]) {
+        if (anomaly[key][idx]) {
+          frames += '<div class="object object-yep"></div>';
+        } else {
+          frames += '<div class="object object-non"></div>';
+        }
+      }
+      frames += '</div>';
+      content += header;
+      content += frames;
+    }
+    $('#content').html(content);
+  }
+</script>
+</html>
