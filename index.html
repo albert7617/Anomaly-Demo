@@ -26,6 +26,15 @@
 .object-yep {
   background-color: red;
 }
+
+img {
+  width: 600px;
+  height: auto;
+}
+
+.tooltip-inner {
+  min-width: 610px;
+}
 </style>
 
 <body>
@@ -71,9 +80,7 @@
       <label class="form-check-label" for="inline-radio-10">91~99</label>
     </div>
     <hr class="pb-3">
-    <div id="content">
-      
-    </div>
+    <div id="content"></div>
   </div>
 </body>
 <script>
@@ -101,9 +108,9 @@
       for (idx in anomaly[key]) {
         let frameCount = Math.floor(idx / 30);
         if (anomaly[key][idx]) {
-          frames += '<div class="object object-yep" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-title="'+frameCount+'s"></div>';
+          frames += `<div class="object object-yep" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-html="true" title="${frameCount}s<br><img src='http://140.113.207.74/${key}/${idx}.jpg'>"></div>`;
         } else {
-          frames += '<div class="object object-non" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-title="'+frameCount+'s"></div>';
+          frames += `<div class="object object-non" data-toggle="tooltip" data-placement="top" data-trigger="hover" data-html="true" title="${frameCount}s<br><img src='http://140.113.207.74/${key}/${idx}.jpg'>"></div>`;
         }
       }
       frames += '</div><hr>';
